@@ -1,6 +1,8 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -31,7 +33,7 @@ public class FlappyBird extends JPanel implements ActionListener{
 	//Bird
 	private Bird bird;
 	
-	
+	private Double score = 0.0;
 	
 	//private ArrayList<Pipes> topPipes;
     //private ArrayList<Pipes> bottomPipes
@@ -132,15 +134,14 @@ public class FlappyBird extends JPanel implements ActionListener{
 		this.bird = bird;
 	}
 	
-/*	public ArrayList<Pipes> getTopPipes() {
-        return this.topPipes;
-    }
+	public Double getScore() {
+		return score;
+	}
 
-    // Método para obter a lista de tubos inferiores
-    public ArrayList<Pipes> getBottomPipes() {
-        return this.bottomPipes;
-    }
-	*/
+	public void setScore(Double score) {
+		this.score = score;
+	}
+	
 	private Image loadImage(String path) {
 	    URL url = getClass().getResource(path);
 	    if (url == null) {
@@ -168,6 +169,16 @@ public class FlappyBird extends JPanel implements ActionListener{
             Pipe pipe = pipes.get(i);
             pipe.drawPipe(g);
         }
+		
+		//score
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial", Font.PLAIN, 32));
+		if (bird.getGameOver() == true) {
+			g.drawString("Game Over: " + String.valueOf(Math.round(score)), 10, 35);
+		}
+		else {
+			g.drawString(String.valueOf(Math.round(score)), 10, 35);
+		}
 	}
 	
 	@Override
@@ -188,6 +199,11 @@ public class FlappyBird extends JPanel implements ActionListener{
 	       for (int i = 0; i < pipes.size(); i++) {
 				Pipe pipe = pipes.get(i);
 				pipe.setPipeX(pipe.getPipeX() + pipe.getVelocityX());
+				
+				if (!pipe.isPassed() && bird.getX() > pipe.getPipeX() + pipe.getPipeWidth()) {
+					pipe.setPassed(true);
+					score += 0.5;
+				}
 				
 				if (collision(bird, pipe)) {
 					bird.setGameOver(true);
@@ -218,4 +234,14 @@ public class FlappyBird extends JPanel implements ActionListener{
 				b.getY() < p.getPipeY() + p.getPipeHeight() && //b's top left corner doesn't reach p's bottom left corner
 				b.getY() + b.getHeight() > p.getPipeY();       //b's bottom left corner doesn't passes p's top left corner
 	 }
+	 
+	 public void restartGame() {
+		    bird.setY(boardHeight / 2);
+		    bird.setVelocityY(0);
+		    pipes.clear();
+		    bird.setGameOver(false);
+		    score = 0.0;
+		    placesPipesTimer.start();
+		    gameLoop.start();
+		}
 }

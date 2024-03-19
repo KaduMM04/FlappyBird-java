@@ -119,6 +119,10 @@ public class Bird implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			velocityY = -9;
+			if (gameOver) {
+                //restart game by resetting conditions
+                flappyBird.restartGame();
+            }
 		}
 	}
 	
