@@ -2,7 +2,7 @@ package application;
 
 import javax.swing.JFrame;
 
-import application.config.FlappyBird;
+import game.FlappyBird;
 
 public class Program {
 
@@ -18,9 +18,10 @@ public class Program {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		FlappyBird flappybird = new FlappyBird();
-		frame.add(flappybird);
+		FlappyBird flappyBird = new FlappyBird();
+		frame.add(flappyBird);
 		frame.pack();
+		flappyBird.requestFocus();
 		frame.setVisible(true);
 	}
 }
